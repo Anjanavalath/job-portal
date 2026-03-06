@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+    <div>
+        <h2 style="font-size: 2rem; font-weight: 800; color: #0f172a; margin: 0;">Latest Job Openings</h2>
+        <p style="color: var(--text-muted); margin-top: 5px;">Discover your next career move</p>
+    </div>
+    <span style="background: #f1f5f9; color: #475569; padding: 6px 16px; border-radius: 50px; font-size: 0.85rem; font-weight: 600;">
+        {{ jobs|length }} positions found
+    </span>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
+    {% for job in jobs %}
+    <div class="job-card-wrapper">
+        <div class="card" style="padding: 2rem; height: 100%; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #e2e8f0; transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 16px; background: #fff;">
+            
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+                    <div style="background: #eff6ff; color: var(--primary); padding: 5px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase;">
+                        <i class="fas fa-map-marker-alt" style="margin-right: 4px;"></i> {{ job.location }}
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-bottom: 0.75rem; line-height: 1.4;">
+                    {{ job.title }}
+                </h3>
+                
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 8px;">
+                    <span style="width: 24px; height: 24px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--primary); font-weight: bold;">
+                        {{ job.company.username|slice:":1"|upper }}
+                    </span>
+                    By <span style="color: #0f172a; font-weight: 600;">{{ job.company.username }}</span>
+                </p>
+            </div>
+
+            <a href="{% url 'core:job_detail' job.id %}" class="btn-nav" style="text-decoration: none; text-align: center; padding: 0.8rem; border-radius: 10px; font-weight: 600; display: block; transition: transform 0.2s;">
+                View Details
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 5rem 2rem; background: #f8fafc; border-radius: 20px; border: 2px dashed #e2e8f0;">
+        <div style="font-size: 3rem; color: #cbd5e1; margin-bottom: 1rem;">
+            <i class="fas fa-search"></i>
+        </div>
+        <h3 style="color: #475569;">No positions found</h3>
+        <p style="color: #94a3b8;">We couldn't find any job openings matching your search.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    /* Card Hover Animation */
+    .job-card-wrapper:hover .card {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-color: var(--primary);
+    }
+
+    .job-card-wrapper .btn-nav:hover {
+        opacity: 0.9;
+        transform: scale(1.02);
+    }
+</style>
+{% endblock %}

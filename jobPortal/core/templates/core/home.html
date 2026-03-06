@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; padding: 5rem 0;">
+    <h1 style="font-size: 3.5rem; font-weight: 800; color: #0f172a; line-height: 1.2;">
+        Your Career Journey <br><span style="color: var(--primary);">Starts Here.</span>
+    </h1>
+    <p style="color: var(--text-muted); font-size: 1.25rem; margin: 1.5rem auto; max-width: 600px;">
+        Connecting the world's most talented students with top-tier companies. Simple, fast, and transparent.
+    </p>
+
+    <div style="margin-top: 2.5rem; display: flex; gap: 1.2rem; justify-content: center; align-items: center;">
+        
+        <a href="{% url 'core:jobs' %}" class="btn-nav" style="text-decoration: none; padding: 1rem 2rem; font-size: 1rem; display: inline-block; min-width: 180px;">
+            Explore Opportunities
+        </a>
+        
+        <a href="{% url 'users:register' %}" style="text-decoration: none; padding: 1rem 2rem; font-size: 1rem; display: inline-block; min-width: 180px; color: var(--primary); border: 2px solid var(--primary); border-radius: 8px; font-weight: 600; transition: 0.3s;">
+            Create Account
+        </a>
+        
+    </div>
+</div>
+{% endblock %}

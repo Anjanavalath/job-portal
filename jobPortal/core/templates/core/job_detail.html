@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; padding: 40px 20px;">
+    <a href="{% url 'core:jobs' %}" style="text-decoration: none; color: #64748b; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#64748b'">
+        <i class="fas fa-arrow-left"></i> Back to Job Listings
+    </a>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        
+        <div class="card" style="padding: 2.5rem; border-radius: 16px; background: white; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <div style="margin-bottom: 2rem;">
+                <h1 style="font-size: 2.2rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; letter-spacing: -0.02em;">{{ job.title }}</h1>
+                <div style="display: flex; gap: 1rem; align-items: center; font-size: 1.1rem;">
+                    <span style="color: #2563eb; font-weight: 700;">{{ job.company.username }}</span>
+                    <span style="color: #cbd5e1;">•</span>
+                    <span style="color: #64748b;"><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #f1f5f9; margin-bottom: 2rem;">
+
+            <div class="job-body">
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-bottom: 1.2rem;">About the Role</h3>
+                <div style="line-height: 1.8; color: #334155; white-space: pre-line; font-size: 1.05rem;">
+                    {{ job.description }}
+                </div>
+                
+                {% if job.requirements %}
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-top: 2rem; margin-bottom: 1.2rem;">Requirements</h3>
+                <div style="line-height: 1.8; color: #334155; white-space: pre-line; font-size: 1.05rem;">
+                    {{ job.requirements }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div>
+            <div class="card" style="padding: 2rem; position: sticky; top: 100px; border-radius: 16px; border: 1px solid #e2e8f0; background: white; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);">
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 800; margin-bottom: 0.75rem; letter-spacing: 0.05em;">Status</p>
+                    <span class="status-badge status-{{ job.status|title }}" style="padding: 6px 16px; border-radius: 50px; font-weight: 700; font-size: 0.85rem;">
+                        <i class="fas fa-circle" style="font-size: 8px; vertical-align: middle; margin-right: 6px;"></i>
+                        {{ job.status|upper }}
+                    </span>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: 0.05em;">Posted Date</p>
+                    <p style="font-weight: 600; color: #1e293b; font-size: 1rem;">{{ job.created_at|date:"M d, Y" }}</p>
+                </div>
+
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #f1f5f9;">
+                    {% if job.status == "open" %}
+                        {% if user.is_authenticated %}
+                            
+                            {% if user.groups.all.0.name == "Student" %}
+                                <a href="{% url 'application:apply_job' job.id %}" class="btn-primary-full" style="text-decoration: none;">
+                                    Apply for this Job
+                                </a>
+                            {% else %}
+                                <div style="background: #fff7ed; padding: 1.2rem; border-radius: 12px; border: 1px solid #ffedd5; text-align: center;">
+                                    <p style="color: #9a3412; font-size: 0.9rem; font-weight: 700; margin: 0;">
+                                        Only Students can apply.
+                                    </p>
+                                    <p style="color: #c2410c; font-size: 0.75rem; margin-top: 4px;">
+                                        Your account is not registered as a student.
+                                    </p>
+                                </div>
+                            {% endif %}
+
+                        {% else %}
+                            <a href="{% url 'users:login' %}?next={{ request.path }}" class="btn-primary-full" style="text-decoration: none;">
+                                Login to Apply
+                            </a>
+                            <p style="font-size: 0.75rem; color: #64748b; text-align: center; margin-top: 12px; font-weight: 500;">
+                                Requires a verified student account
+                            </p>
+                        {% endif %}
+                    {% else %}
+                        <div style="background: #fef2f2; padding: 1.2rem; border-radius: 12px; border: 1px solid #fee2e2; text-align: center;">
+                            <p style="color: #991b1b; font-weight: 800; margin: 0;">Applications Closed</p>
+                            <p style="color: #b91c1c; font-size: 0.75rem; margin-top: 4px;">This position is no longer accepting applications.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling for the status badges */
+    .status-Open { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .status-Closed { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+    /* Re-using your Blue Button style for consistency */
+    .btn-primary-full {
+        display: block;
+        width: 100%;
+        background-color: #2563eb;
+        color: white;
+        padding: 1rem;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-primary-full:hover {
+        background-color: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobFlow | Modern Career Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --nav-bg: #0f172a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--nav-bg);
+            padding: 1rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .brand h1 { color: #fff; font-size: 1.5rem; letter-spacing: -1px; }
+        .brand span { color: var(--primary); }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: #cbd5e1; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: #fff; }
+
+        .btn-nav {
+            background: var(--primary);
+            color: white !important;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .container { width: 85%; max-width: 1200px; margin: 3rem auto; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{% url 'core:home' %}" class="brand" style="text-decoration:none;"><h1>Job<span>Flow</span></h1></a>
+        
+        <div class="nav-links">
+            <a href="{% url 'core:jobs' %}">Browse Jobs</a>
+
+            {% if user.is_authenticated %}
+                {% if "Student" in user.groups.all.values_list.name %}
+                    <a href="{% url 'application:student_dashboard' %}">My Applications</a>
+                {% elif "Company" in user.groups.all.values_list.name %}
+                    <a href="{% url 'core:create_job' %}" class="btn-nav">Post a Job</a>
+                    <a href="{% url 'core:company_dashboard' %}">Dashboard</a>
+                {% endif %}
+                
+                <span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 10px;">|</span>
+                <a href="{% url 'users:logout' %}" style="color: #f87171;">Logout ({{ user.username }})</a>
+
+            {% else %}
+                <a href="{% url 'users:login' %}">Login</a>
+                <a href="{% url 'users:register' %}" class="btn-nav">Get Started</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
