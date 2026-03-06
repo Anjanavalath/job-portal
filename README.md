@@ -39,7 +39,7 @@ JobPortal/
 Clone the repository
 
 Bash
-git clone https://github.com/yourusername/jobportal.git
+git clone https://github.com/Anjanavalath/job-portal
 cd JobFlow
 Create a Virtual Environment
 
